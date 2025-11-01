@@ -1,10 +1,6 @@
 pipeline {
     // Kubernetes 플러그인에 'kubectl-agent' 라벨로 정의된 Pod 템플릿을 사용
-    agent {
-        kubernetes {
-            label 'kubectl-agent'
-        }
-    }
+    agent any
 
     environment {
         BUILD_NAME   = "dev-app-build-${env.BUILD_NUMBER}"
