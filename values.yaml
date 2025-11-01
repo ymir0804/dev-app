@@ -1,0 +1,34 @@
+# jenkins-values.yaml
+controller:
+  serviceType: NodePort
+  nodePort: 30004
+  
+  # --- 플러그인 목록 보강 ---
+  # docker-workflow와 workspace-cleanup의 핵심 의존성 플러그인들을 명시적으로 추가
+  installPlugins:
+    - kubernetes:4384.v1b_6367f393d9
+    - workflow-aggregator:608.v67378e9d3db_1
+    - git:5.8.0
+    - configuration-as-code:2006.v001a_2ca_6b_574  
+  
+  containerEnv:
+    - name: DOCKER_HOST
+      value: unix:///var/run/docker.sock
+
+  # --- DooD(Docker-out-of-Docker) 설정 ---
+  # 1. 호스트의 Docker 소켓을 볼륨으로 정의
+  volumes:
+    - name: docker-sock
+      hostPath:
+        path: /var/run/docker.sock
+  
+  # 2. 정의한 볼륨을 Jenkins 컨테이너에 마운트
+  containerVolumeMounts:
+    - name: docker-sock
+      mountPath: /var/run/docker.sock
+  
+
+persistence:
+  enabled: true
+  existingClaim: jenkins-pvc
+

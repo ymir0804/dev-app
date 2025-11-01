@@ -1,10 +1,10 @@
 pipeline {
-    // Dockerfile을 사용해 빌드 환경을 구성하도록 지정
+    // 이 파이프라인의 실행 환경을 Dockerfile을 기반으로 구축
     agent { dockerfile true }
 
     environment {
         DOCKER_IMAGE = 'ghcr.io/ymir0804/dev-app'
-        GHCR_CREDS   = 'ymir0804' // Jenkins에 등록된 Credential ID
+        GHCR_CREDS   = 'ymir0804'
     }
     
     stages {
@@ -16,6 +16,7 @@ pipeline {
                     def version = readFile('VERSION').trim()
                     env.DOCKER_TAG = version
                     
+                    // 이 스텝은 'docker-workflow' 플러그인이 제공하는 'docker' 객체를 사용합니다.
                     docker.withRegistry('https://ghcr.io', GHCR_CREDS) {
                         def customImage = docker.build("${DOCKER_IMAGE}:${DOCKER_TAG}", ".")
                         customImage.push()
@@ -23,13 +24,6 @@ pipeline {
                     }
                 }
             }
-        }
-    }
-    post {
-        always {
-            // 에이전트에 남은 이미지 정리
-            sh "docker rmi ${DOCKER_IMAGE}:${env.DOCKER_TAG} || true"
-            sh "docker rmi ${DOCKER_IMAGE}:latest || true"
         }
     }
 }
