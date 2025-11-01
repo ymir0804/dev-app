@@ -1,12 +1,6 @@
 pipeline {
     // 새로 추가한 Pod 템플릿을 사용하도록 지정
-    agent {
-        kubernetes {
-            label 'docker-agent'
-            defaultContainer 'jnlp' // 기본 작업은 jnlp 컨테이너에서 수행
-        }
-    }
-
+    agent any
     environment {
         DOCKER_IMAGE = 'ghcr.io/ymir0804/dev-app'
         GHCR_CREDS   = 'ymir0804'
