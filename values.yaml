@@ -10,7 +10,10 @@ controller:
     - workflow-aggregator:608.v67378e9d3db_1
     - git:5.8.0
     - configuration-as-code:2006.v001a_2ca_6b_574  
-  
+    - docker-plugin
+    - docker-workflow
+    - docker-commons
+
   containerEnv:
     - name: DOCKER_HOST
       value: unix:///var/run/docker.sock
